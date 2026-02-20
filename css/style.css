@@ -1,0 +1,17 @@
+body{
+    font-family: Arial;
+    background:#fff5f7;
+    text-align:center;
+}
+
+.grid{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+}
+
+.card{
+    border:1px solid #ddd;
+    padding:15px;
+    background:white;
+}
