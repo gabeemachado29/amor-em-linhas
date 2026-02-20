@@ -33,6 +33,9 @@ if(isset($_GET['api']) && $_GET['api'] == 'produtos'){
             <a href="login.php">Login</a>
         <?php endif; ?>
     </div>
+    <?php if(isset($_SESSION['user']) && $_SESSION['user']['tipo_perfil'] == 'ADMIN'): ?>
+        <a href="admin/dashboard.php">Admin</a>
+    <?php endif; ?>
 </header>
 
 <div class="container">
