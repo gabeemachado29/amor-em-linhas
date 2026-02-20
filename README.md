@@ -1,5 +1,11 @@
 # amor-em-linhas
 
+Admin padrão:
+
+Email: admin@amor.com
+
+Senha: 123456
+
 🔥 COMO RODAR
 
 Se tiver PHP instalado:
