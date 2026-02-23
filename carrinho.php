@@ -1,62 +1,74 @@
-<?php require "config/database.php"; ?>
+<?php
+session_start();
+$carrinho = $_SESSION['carrinho'] ?? [];
+?>
 
-<link rel="stylesheet" href="assets/css/style.css">
-<div class="container">
-<h2>🛒 Seu Carrinho</h2>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrinho - Amor em Linhas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
 
-<div id="lista"></div>
-<h3 id="total"></h3>
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.php">🧵 Amor em Linhas</a>
+    </div>
+</nav>
 
-<input type="text" id="cep" placeholder="Digite seu CEP">
-<button onclick="calcularFrete()">Calcular Frete</button>
-<p id="frete"></p>
+<div class="container my-5">
 
-<a href="checkout.php"><button class="btn">Finalizar Compra</button></a>
+    <h2 class="mb-4">🛒 Seu Carrinho</h2>
+
+    <?php if(empty($carrinho)): ?>
+        <div class="alert alert-info">
+            Seu carrinho está vazio.
+        </div>
+    <?php else: ?>
+
+        <table class="table table-bordered bg-white shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Produto</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $total = 0;
+                foreach($carrinho as $item): 
+                    $subtotal = $item['preco'] * $item['quantidade'];
+                    $total += $subtotal;
+                ?>
+                    <tr>
+                        <td><?php echo $item['nome']; ?></td>
+                        <td>R$ <?php echo number_format($item['preco'],2,',','.'); ?></td>
+                        <td><?php echo $item['quantidade']; ?></td>
+                        <td>R$ <?php echo number_format($subtotal,2,',','.'); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <div class="text-end">
+            <h4>Total: 
+                <span class="text-primary">
+                    R$ <?php echo number_format($total,2,',','.'); ?>
+                </span>
+            </h4>
+
+            <a href="checkout.php" class="btn btn-success btn-lg mt-3">
+                Finalizar Compra
+            </a>
+        </div>
+
+    <?php endif; ?>
+
 </div>
 
-<script>
-let carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
-let html = "";
-let total = 0;
-
-fetch("index.php?api=produtos")
-.then(res => res.json())
-.then(produtos => {
-
-for(let id in carrinho){
-
-let p = produtos.find(x => x.id == id);
-
-if(p){
-let qtd = carrinho[id];
-let subtotal = p.preco * qtd;
-total += subtotal;
-
-html += `
-<div>
-${p.nome} - Qtd: ${qtd} - R$ ${subtotal.toFixed(2)}
-<button onclick="removerItem(${id})">Remover</button>
-</div>
-`;
-}
-}
-
-document.getElementById("lista").innerHTML = html;
-document.getElementById("total").innerHTML = "Total: R$ " + total.toFixed(2);
-
-});
-
-function calcularFrete(){
-let cep = document.getElementById("cep").value;
-cep = cep.replace("-", "");
-
-let valor = 25;
-
-if(cep.startsWith("0") || cep.startsWith("1")) valor = 15;
-if(cep.startsWith("2") || cep.startsWith("3")) valor = 20;
-
-document.getElementById("frete").innerHTML = "Frete: R$ " + valor.toFixed(2);
-}
-</script>
-
-<script src="js/carrinho.js"></script>
+</body>
+</html>
