@@ -1,65 +1,35 @@
 <?php
-require "config/database.php";
+require_once "config/database.php";
 
-if($_POST){
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $nome = $_POST['nome'];
+    $email = $_POST['email'];
+    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
 
-$nome = trim($_POST['nome']);
-$email = trim($_POST['email']);
-$senha = $_POST['senha'];
+    $stmt = $db->prepare("INSERT INTO usuarios (nome,email,senha_hash,tipo_perfil) VALUES (?,?,?,?)");
+    $stmt->execute([$nome,$email,$senha,'cliente']);
 
-if(!$nome || !$email || !$senha){
-    die("Preencha todos os campos.");
-}
-
-$senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
-$stmt = $db->prepare("INSERT INTO usuarios 
-(nome,email,senha_hash,tipo_perfil)
-VALUES (?,?,?,'CLIENTE')");
-
-try{
-$stmt->execute([$nome,$email,$senhaHash]);
-
-$userId = $db->lastInsertId();
-
-$_SESSION['user'] = [
-'id' => $userId,
-'nome' => $nome,
-'email' => $email,
-'tipo_perfil' => 'CLIENTE'
-];
-
-header("Location: index.php");
-exit;
-
-}catch(PDOException $e){
-die("Email já cadastrado.");
-}
+    header("Location: login.php");
+    exit;
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Criar Conta</title>
-<link rel="stylesheet" href="assets/css/style.css">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="container">
-<h2>👤 Criar Conta</h2>
+<h2>Cadastro</h2>
 
-<form method="POST" style="max-width:400px;">
-<input name="nome" placeholder="Nome completo" required><br><br>
-<input type="email" name="email" placeholder="Email" required><br><br>
-<input type="password" name="senha" placeholder="Senha" required><br><br>
-
-<button class="btn">Cadastrar</button>
+<form method="POST">
+    <input type="text" name="nome" placeholder="Nome" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="senha" placeholder="Senha" required>
+    <button type="submit">Cadastrar</button>
 </form>
-
-<p>Já tem conta? <a href="login.php">Entrar</a></p>
-</div>
 
 </body>
 </html>
