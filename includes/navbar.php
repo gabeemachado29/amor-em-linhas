@@ -2,6 +2,9 @@
 if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
+
+$lang = $_SESSION['lang'] ?? 'pt';
+$textos = require __DIR__ . "/../lang/$lang.php";
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -16,18 +19,21 @@ if(session_status() === PHP_SESSION_NONE){
             <ul class="navbar-nav ms-auto align-items-center">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="index.php">Produtos</a>
+                    <a class="nav-link" href="index.php">
+                        <?php echo $textos['produtos']; ?>
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="carrinho.php">🛒 Carrinho</a>
+                    <a class="nav-link" href="carrinho.php">
+                        🛒 <?php echo $textos['carrinho']; ?>
+                    </a>
                 </li>
 
                 <?php if(isset($_SESSION['usuario_id'])): ?>
 
-                    <!-- PERFIL -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center"
+                        <a class="nav-link dropdown-toggle"
                            href="#"
                            role="button"
                            data-bs-toggle="dropdown">
@@ -35,30 +41,25 @@ if(session_status() === PHP_SESSION_NONE){
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="perfil.php">✏ Editar Perfil</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="compras.php">📦 Minhas Compras</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="configuracoes.php">⚙ Configurações</a>
-                            </li>
+                            <li><a class="dropdown-item" href="perfil.php">Perfil</a></li>
+                            <li><a class="dropdown-item" href="configuracoes.php">Configurações</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="logout.php">🚪 Sair</a>
-                            </li>
+                            <li><a class="dropdown-item text-danger" href="logout.php">Sair</a></li>
                         </ul>
                     </li>
 
                 <?php else: ?>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">Entrar</a>
+                        <a class="nav-link" href="login.php">
+                            <?php echo $textos['login']; ?>
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="cadastro.php">Cadastrar</a>
+                        <a class="nav-link" href="cadastro.php">
+                            <?php echo $textos['cadastro']; ?>
+                        </a>
                     </li>
 
                 <?php endif; ?>
