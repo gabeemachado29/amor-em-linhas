@@ -1,96 +1,53 @@
-body{
-margin:0;
-font-family: 'Inter', sans-serif;
-background:#f8f9fc;
-color:#333;
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f4f6fb;
 }
 
-header{
-background:white;
-padding:15px 40px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 2px 8px rgba(0,0,0,0.05);
-position:sticky;
-top:0;
-z-index:1000;
+header {
+    background: white;
+    padding: 15px 30px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
-.logo{
-font-weight:700;
-font-size:22px;
-color:#ff4d88;
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #4a6cf7;
 }
 
-header a{
-text-decoration:none;
-margin-left:15px;
-color:#555;
-font-weight:500;
+.produtos-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 20px;
 }
 
-.container{
-width:92%;
-max-width:1200px;
-margin:auto;
-padding:40px 0;
+.card-produto {
+    background: white;
+    width: 250px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    padding: 15px;
+    text-align: center;
+    transition: 0.3s;
 }
 
-.grid{
-display:grid;
-grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-gap:30px;
+.card-produto:hover {
+    transform: translateY(-5px);
 }
 
-.card{
-background:white;
-border-radius:16px;
-padding:20px;
-box-shadow:0 8px 20px rgba(0,0,0,0.05);
-transition:0.3s;
+.preco {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a6cf7;
 }
 
-.card:hover{
-transform:translateY(-6px);
-}
-
-.btn{
-background:#ff4d88;
-border:none;
-padding:12px 18px;
-color:white;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
-}
-
-.btn:hover{
-opacity:0.9;
-}
-
-.dashboard-grid{
-display:grid;
-grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-gap:25px;
-margin-bottom:40px;
-}
-
-.metric{
-background:white;
-padding:25px;
-border-radius:16px;
-box-shadow:0 8px 20px rgba(0,0,0,0.05);
-}
-
-.metric h3{
-margin:0;
-font-size:14px;
-color:#777;
-}
-
-.metric p{
-font-size:26px;
-font-weight:700;
-margin:10px 0 0 0;
+button {
+    background: #4a6cf7;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
 }
