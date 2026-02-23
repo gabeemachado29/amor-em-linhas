@@ -1,54 +1,30 @@
 <?php
-session_start();
 require_once "config/database.php";
+session_start();
+include "includes/navbar.php";
 
-if(!isset($_SESSION['usuario'])){
-    header("Location: login.php");
-    exit;
-}
+$stmt = $db->prepare("SELECT * FROM usuarios WHERE id = ?");
+$stmt->execute([$_SESSION['usuario_id']]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$usuario = $_SESSION['usuario'];
-
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+if($_SERVER["REQUEST_METHOD"] == "POST"){
     $nome = $_POST['nome'];
-
-    $stmt = $db->prepare("UPDATE usuarios SET nome = ? WHERE id = ?");
-    $stmt->execute([$nome, $usuario['id']]);
-
-    $_SESSION['usuario']['nome'] = $nome;
-    $sucesso = "Perfil atualizado com sucesso!";
+    $db->prepare("UPDATE usuarios SET nome=? WHERE id=?")
+       ->execute([$nome,$_SESSION['usuario_id']]);
+    $_SESSION['usuario_nome'] = $nome;
+    header("Location: perfil.php");
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Meu Perfil</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-
 <div class="container mt-5">
-<div class="card p-4 shadow">
-
 <h3>Editar Perfil</h3>
 
-<?php if(isset($sucesso)): ?>
-<div class="alert alert-success"><?php echo $sucesso; ?></div>
-<?php endif; ?>
-
-<form method="POST">
-<div class="mb-3">
-<label>Nome</label>
-<input type="text" name="nome" class="form-control" value="<?php echo $usuario['nome']; ?>">
-</div>
-
-<button class="btn btn-primary">Salvar Alterações</button>
+<form method="POST" class="card p-4 shadow-sm">
+<input type="text" name="nome"
+class="form-control mb-3"
+value="<?php echo $usuario['nome']; ?>">
+<button class="btn btn-primary">Salvar</button>
 </form>
-
-</div>
 </div>
 
-</body>
-</html>
+<?php include "scripts.php"; ?>
