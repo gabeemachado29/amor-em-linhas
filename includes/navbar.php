@@ -31,7 +31,6 @@ $textos = require __DIR__ . "/../lang/$lang.php";
                 </li>
 
                 <?php if(isset($_SESSION['usuario_id'])): ?>
-
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"
                            href="#"
@@ -47,9 +46,7 @@ $textos = require __DIR__ . "/../lang/$lang.php";
                             <li><a class="dropdown-item text-danger" href="logout.php">Sair</a></li>
                         </ul>
                     </li>
-
                 <?php else: ?>
-
                     <li class="nav-item">
                         <a class="nav-link" href="login.php">
                             <?php echo $textos['login']; ?>
@@ -61,7 +58,6 @@ $textos = require __DIR__ . "/../lang/$lang.php";
                             <?php echo $textos['cadastro']; ?>
                         </a>
                     </li>
-
                 <?php endif; ?>
 
             </ul>
