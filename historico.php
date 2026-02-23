@@ -1,26 +1,36 @@
 <?php
-require "config/database.php";
+session_start();
+require_once "config/database.php";
 
-if(!isset($_SESSION['user'])){
-header("Location: login.php");
-exit;
+if(!isset($_SESSION['usuario'])){
+    header("Location: login.php");
+    exit;
 }
 
-$id = $_SESSION['user']['id'];
+$usuario_id = $_SESSION['usuario']['id'];
 
-$pedidos = $db->query("SELECT * FROM pedidos WHERE cliente_id = $id ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $db->prepare("SELECT * FROM pedidos WHERE cliente_id = ?");
+$stmt->execute([$usuario_id]);
+$pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<link rel="stylesheet" href="assets/css/style.css">
-<div class="container">
-<h2>📦 Meus Pedidos</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Histórico</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-<?php foreach($pedidos as $p): ?>
-<div class="card">
-Pedido #<?= $p['id'] ?><br>
-Status: <?= $p['status'] ?><br>
-Total: R$ <?= number_format($p['valor_total'],2,",",".") ?>
-</div>
+<h2>Meus Pedidos</h2>
+
+<?php foreach($pedidos as $pedido): ?>
+    <div class="card-produto">
+        <p><strong>Pedido:</strong> #<?php echo $pedido['id']; ?></p>
+        <p>Status: <?php echo $pedido['status']; ?></p>
+        <p>Total: R$ <?php echo number_format($pedido['valor_total'],2,',','.'); ?></p>
+    </div>
 <?php endforeach; ?>
 
-</div>
+</body>
+</html>
