@@ -1,5 +1,6 @@
 <?php
 require_once "config/database.php";
+session_start();
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $nome = $_POST['nome'];
@@ -7,29 +8,74 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
 
     $stmt = $db->prepare("INSERT INTO usuarios (nome,email,senha_hash,tipo_perfil) VALUES (?,?,?,?)");
-    $stmt->execute([$nome,$email,$senha,'cliente']);
-
-    header("Location: login.php");
-    exit;
+    
+    try {
+        $stmt->execute([$nome,$email,$senha,'cliente']);
+        header("Location: login.php");
+        exit;
+    } catch (PDOException $e) {
+        $erro = "Este email já está cadastrado.";
+    }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Cadastro</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <title>Cadastro - Amor em Linhas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
-<h2>Cadastro</h2>
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.php">🧵 Amor em Linhas</a>
+    </div>
+</nav>
 
-<form method="POST">
-    <input type="text" name="nome" placeholder="Nome" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="senha" placeholder="Senha" required>
-    <button type="submit">Cadastrar</button>
-</form>
+<!-- FORM CENTRALIZADO -->
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="card shadow-lg border-0 p-4" style="width: 450px; border-radius: 15px;">
+
+        <h3 class="text-center mb-4 fw-bold">Criar Conta</h3>
+
+        <?php if(isset($erro)): ?>
+            <div class="alert alert-danger">
+                <?php echo $erro; ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Nome Completo</label>
+                <input type="text" name="nome" class="form-control form-control-lg" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control form-control-lg" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input type="password" name="senha" class="form-control form-control-lg" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                Criar Conta
+            </button>
+
+        </form>
+
+        <div class="text-center mt-4">
+            Já tem conta? <a href="login.php">Entrar</a>
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>
