@@ -1,14 +1,14 @@
 <?php
-session_start();
+    // MUDAMOS AQUI DE 'localhost' PARA '127.0.0.1'
+    $host = '127.0.0.1';
+    $dbname = 'amor_em_linhas'; 
+    $user = 'root';             
+    $pass = '';                 
 
-$host = "sql313.infinityfree.com";
-$dbname = "if0_41207105_amorlinhas";
-$user = "if0_41207105";
-$pass = "SUA_SENHA_AQUI";
-
-try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erro no banco: " . $e->getMessage());
-}
+    try {
+        $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch(PDOException $e) {
+        die("Erro de conexão com o banco de dados: " . $e->getMessage());
+    }
+?>

@@ -1,53 +1,109 @@
+/* gabeemachado29/amor-em-linhas/css/style.css */
+:root {
+    --primary-olive: #d4d9a1; 
+    --dark-olive: #434a11;
+    --soft-white: #ffffff;
+    --light-bg: #fdfdfd; 
+}
+
+/* Ajuste automático para Tema Escuro */
+[data-bs-theme="dark"] {
+    [data-bs-theme="dark"] {
+    --primary-olive: #5b6135; 
+    --dark-olive: #f8f9fa;
+    --soft-white: #212529;
+    }
+}
+
 body {
-    margin: 0;
-    font-family: Arial;
-    background: #f4f6fb;
+    background-color: var(--soft-white);
+    color: var(--dark-olive);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
 }
 
-header {
-    background: white;
-    padding: 15px 30px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+/* NAVBAR NO TEMA */
+.navbar {
+    background-color: var(--soft-white) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1rem 0;
 }
 
-.logo {
-    font-size: 22px;
-    font-weight: bold;
-    color: #4a6cf7;
+.navbar-brand {
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--dark-olive) !important;
+    text-transform: uppercase;
 }
 
-.produtos-container {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding: 20px;
+.nav-link {
+    color: var(--dark-olive) !important;
+    font-size: 0.9rem;
+    text-transform: uppercase;
 }
 
-.card-produto {
-    background: white;
-    width: 250px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    padding: 15px;
-    text-align: center;
-    transition: 0.3s;
-}
-
-.card-produto:hover {
-    transform: translateY(-5px);
-}
-
-.preco {
-    font-size: 18px;
-    font-weight: bold;
-    color: #4a6cf7;
-}
-
-button {
-    background: #4a6cf7;
-    color: white;
+/* BOTÃO DE PERFIL NO TEMA */
+.btn-perfil-tema {
+    background-color: var(--primary-olive);
+    color: var(--dark-olive) !important;
     border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+/* CARDS DE PRODUTO */
+.card-produto {
+    border: none;
+    background: none;
+    text-align: center;
+}
+
+.card-img-container {
+    background-color: #f7f7f7;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    aspect-ratio: 3/4; /* Deixa as fotos no mesmo tamanho */
+}
+
+.card-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn-comprar {
+    background-color: var(--primary-olive);
+    color: var(--dark-olive);
+    border: none;
+    border-radius: 50px;
+    padding: 10px;
+    width: 100%;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin-top: 10px;
+}
+
+/* Estilo do Carrinho */
+.input-group .btn {
+    border-color: #eee !important;
+}
+
+.input-group input {
+    border-left: none;
+    border-right: none;
+    font-size: 0.9rem;
+}
+
+.btn-link:hover {
+    color: var(--primary-olive) !important;
+}
+
+/* Deixa o Resumo do pedido "fixo" ao rolar no computador */
+@media (min-width: 768px) {
+    .col-md-4 .card {
+        position: sticky;
+        top: 100px;
+    }
 }
