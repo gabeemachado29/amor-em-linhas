@@ -1,6 +1,10 @@
 <?php
     session_start();
     require_once "config/database.php";
+
+    // Busca todos os produtos para o JavaScript conseguir renderizar a tela
+    $stmt = $db->query("SELECT id, nome, preco, imagem_principal_url FROM produtos");
+    $todosProdutos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -66,45 +70,79 @@
         <script src="js/carrinho.js"></script>
 
         <script>
-        // Lógica para renderizar o carrinho na tela
-        document.addEventListener("DOMContentLoaded", function() {
-            renderizarCarrinho();
-        });
+            // Transforma os produtos do PHP em uma variável JavaScript
+            const produtosDB = <?php echo json_encode($todosProdutos); ?>;
 
-        function renderizarCarrinho() {
-            const carrinho = getCarrinho(); // Função do seu js/carrinho.js
-            const container = document.getElementById('lista-itens-carrinho');
-            
-            if (Object.keys(carrinho).length === 0) {
-                container.innerHTML = `
-                    <div class="py-5 text-center">
-                        <p class="text-muted">Sua sacola está vazia.</p>
-                        <a href="index.php" class="btn btn-outline-dark rounded-pill px-4">Voltar para a loja</a>
-                    </div>`;
-                return;
+            document.addEventListener("DOMContentLoaded", function() {
+                renderizarCarrinho();
+            });
+
+            function renderizarCarrinho() {
+                const carrinho = getCarrinho(); // Função do seu js/carrinho.js
+                const container = document.getElementById('lista-itens-carrinho');
+                
+                if (Object.keys(carrinho).length === 0) {
+                    container.innerHTML = `
+                        <div class="py-5 text-center">
+                            <p class="text-muted">Sua sacola está vazia.</p>
+                            <a href="index.php" class="btn btn-outline-dark rounded-pill px-4">Voltar para a loja</a>
+                        </div>`;
+                    return;
+                }
+
+                let htmlItens = '';
+                let subtotal = 0;
+
+                // Percorre os itens salvos no localStorage
+                for (let idProduto in carrinho) {
+                    let quantidade = carrinho[idProduto];
+                    
+                    // Encontra os detalhes do produto (nome, preço, imagem) no array que veio do PHP
+                    let produto = produtosDB.find(p => p.id == idProduto);
+
+                    if (produto) {
+                        let precoTotalItem = produto.preco * quantidade;
+                        subtotal += precoTotalItem;
+
+                        htmlItens += `
+                        <div class="card mb-3 shadow-sm border-0" style="border-radius: 12px;">
+                            <div class="row g-0 align-items-center p-3">
+                                <div class="col-3 col-md-2">
+                                    <img src="${produto.imagem_principal_url}" class="img-fluid rounded" alt="${produto.nome}" onerror="this.src='https://placehold.co/400x533/d4d9a1/434a11?text=Sem+Foto'">
+                                </div>
+                                <div class="col-9 col-md-10 ps-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 fw-bold">${produto.nome}</h6>
+                                        <button class="btn btn-sm text-danger p-0" onclick="removerItem(${produto.id})">Remover</button>
+                                    </div>
+                                    <p class="text-muted mb-1 small">Quantidade: ${quantidade}</p>
+                                    <p class="mb-0 fw-bold" style="color: var(--dark-olive);">R$ ${precoTotalItem.toFixed(2).replace('.', ',')}</p>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                }
+
+                // Atualiza a tela com os itens
+                container.innerHTML = htmlItens;
+
+                // Atualiza os valores de Resumo do Pedido na lateral
+                let valorFormatado = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
+                document.getElementById('resumo-subtotal').innerText = valorFormatado;
+                document.getElementById('resumo-total').innerText = valorFormatado;
             }
 
-            // Aqui você pode fazer um fetch para um pequeno script PHP que retorna os dados dos produtos
-            // Por simplicidade, vamos apenas mostrar que os itens existem. 
-            // Em um sistema real, você usaria o ID para buscar Nome e Preço via AJAX.
-            
-            container.innerHTML = '<p class="text-muted">Processando itens...</p>';
-            
-            // Simulação de preenchimento do resumo (ajuste conforme buscar os preços reais)
-            // No seu checkout.php já existe a lógica que valida o preço no banco.
-        }
-
-        function finalizarCompra() {
-            const carrinho = localStorage.getItem("carrinho");
-            if (!carrinho || carrinho === "{}") {
-                alert("Sua sacola está vazia!");
-                return;
+            function finalizarCompra() {
+                const carrinho = localStorage.getItem("carrinho");
+                if (!carrinho || carrinho === "{}") {
+                    alert("Sua sacola está vazia!");
+                    return;
+                }
+                
+                // Coloca o JSON do localStorage no campo oculto e envia para o checkout.php
+                document.getElementById('inputCarrinhoJson').value = carrinho;
+                document.getElementById('formFinalizar').submit();
             }
-            
-            // Coloca o JSON do localStorage no campo oculto e envia para o checkout.php
-            document.getElementById('inputCarrinhoJson').value = carrinho;
-            document.getElementById('formFinalizar').submit();
-        }
         </script>
     </body>
 </html>

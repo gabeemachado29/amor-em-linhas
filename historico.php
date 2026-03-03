@@ -83,7 +83,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 R$ <?php echo number_format($pedido['valor_total'], 2, ',', '.'); ?>
                                             </td>
                                             <td class="text-center">
-                                                <button class="btn btn-sm btn-outline-primary">Ver Detalhes</button>
+                                                <a href="detalhes_pedido.php?id=<?php echo $pedido['id']; ?>" class="btn btn-sm btn-outline-primary">Ver Detalhes</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

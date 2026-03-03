@@ -39,12 +39,24 @@
                             <p class="text-uppercase mb-1 small" style="color: var(--dark-olive) !important;">
                                 <?php echo htmlspecialchars($prod['nome']); ?>
                             </p>
-                            <p class="fw-bold mb-0" style="color: var(--dark-olive) !important;">
+                           <p class="fw-bold mb-0" style="color: var(--dark-olive) !important;">
                                 R$ <?php echo number_format($prod['preco'], 2, ',', '.'); ?>
                             </p>
-                            <button class="btn-comprar w-100 py-2 mt-2" onclick="addCarrinho(<?php echo $prod['id']; ?>)">
-                                Comprar
-                            </button>
+                            
+                            <?php 
+                            // Verifica se o usuário logado é o administrador
+                            $isAdmin = isset($_SESSION['user']) && $_SESSION['user']['tipo_perfil'] === 'ADMIN'; 
+                            ?>
+                            
+                            <?php if(!$isAdmin): ?>
+                                <button class="btn-comprar w-100 py-2 mt-2" onclick="addCarrinho(<?php echo $prod['id']; ?>)">
+                                    Comprar
+                                </button>
+                            <?php else: ?>
+                                <a href="admin/gerenciar_produtos.php?editar=<?php echo $prod['id']; ?>" class="btn btn-warning w-100 py-2 mt-2 fw-bold text-dark text-decoration-none" style="font-size: 0.85rem; border-radius: 50px; display: inline-block;">
+                                    ✏️ Editar Produto
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
