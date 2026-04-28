@@ -94,6 +94,9 @@
                             <a class="nav-link" href="gerenciar_produtos.php" style="color: var(--dark-olive) !important;">Gerenciar Produtos</a>
                         </li>
                         <li class="nav-item">
+                           <a href="gerenciar_banners.php" class="nav-link" style="color: var(--dark-olive) !important;">Gerenciar Banners</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="config_pix.php" style="color: var(--dark-olive) !important;">Configurar PIX</a>
                         </li>
                         <li class="nav-item d-none d-lg-block">

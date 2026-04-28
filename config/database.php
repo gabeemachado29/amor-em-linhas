@@ -1,6 +1,6 @@
 <?php
     // MUDAMOS AQUI DE 'localhost' PARA '127.0.0.1'
-    $host = '127.0.0.1';
+    $host = '127.0.0.1:3307';
     $dbname = 'amor_em_linhas'; 
     $user = 'root';             
     $pass = '';                 
