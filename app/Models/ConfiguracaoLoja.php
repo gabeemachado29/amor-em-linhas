@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ConfiguracaoLoja extends Model
+{
+    protected $fillable = [
+        'chave_pix',
+        'nome_loja',
+    ];
+}

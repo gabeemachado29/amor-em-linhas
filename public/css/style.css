@@ -1,0 +1,166 @@
+/* gabeemachado29/amor-em-linhas/css/style.css */
+:root {
+    --primary-olive: #d4d9a1; 
+    --dark-olive: #434a11;
+    --soft-white: #ffffff;
+    --light-bg: #ebebeb; /* Fundo Mercado Livre */
+    --text-color: #333333;
+    --price-green: #00a650; /* Verde de preço/frete do ML */
+}
+
+/* Ajuste automático para Tema Escuro */
+[data-bs-theme="dark"] {
+    --primary-olive: #5b6135; 
+    --dark-olive: #f8f9fa;
+    --soft-white: #212529;
+    --light-bg: #121212;
+    --text-color: #e0e0e0;
+}
+
+body {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+/* NAVBAR NO TEMA */
+.navbar {
+    background-color: var(--primary-olive) !important;
+    padding: 10px 0;
+    box-shadow: 0 1px 0 0 rgba(0,0,0,.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: var(--dark-olive) !important;
+}
+
+.nav-link {
+    color: var(--dark-olive) !important;
+    font-size: 0.9rem;
+}
+
+/* CARDS DE PRODUTO */
+.card-produto {
+    border: none;
+    background-color: var(--soft-white);
+    text-align: left;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.12);
+    transition: box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-produto:hover {
+    box-shadow: 0 8px 24px 0 rgba(0,0,0,.12);
+}
+
+.card-img-container {
+    background-color: #f7f7f7;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+.card-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+}
+
+.card-body-produto {
+    padding: 16px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-price {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--text-color);
+    margin-bottom: 4px;
+}
+
+.card-frete {
+    font-size: 13px;
+    color: var(--price-green);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.card-title-produto {
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.btn-comprar {
+    background-color: rgba(67, 74, 17, 0.1);
+    color: var(--dark-olive);
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    width: 100%;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    margin-top: auto;
+}
+
+.btn-comprar:hover {
+    background-color: rgba(67, 74, 17, 0.2);
+}
+
+/* SEARCH BAR */
+.search-bar-container {
+    flex-grow: 1;
+    max-width: 600px;
+    margin: 0 20px;
+}
+.search-bar {
+    width: 100%;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+    font-size: 16px;
+}
+.search-bar:focus {
+    outline: none;
+}
+
+/* Estilo do Carrinho */
+.card-carrinho {
+    background-color: var(--soft-white);
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.12);
+}
+
+/* Auth Cards */
+.auth-card {
+    background-color: var(--soft-white);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.12);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+@media (min-width: 768px) {
+    .col-md-4 .card {
+        position: sticky;
+        top: 100px;
+    }
+}
