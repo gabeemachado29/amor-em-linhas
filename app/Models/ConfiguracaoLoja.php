@@ -9,5 +9,6 @@ class ConfiguracaoLoja extends Model
     protected $fillable = [
         'chave_pix',
         'nome_loja',
+        'valor_frete_fixo',
     ];
 }

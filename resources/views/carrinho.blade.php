@@ -3,44 +3,48 @@
 @section('title', 'Minha Sacola - Amor em Linhas')
 
 @section('content')
-<div class="row g-5 my-5">
-    <div class="col-md-8">
-        <h4 class="fw-light text-uppercase mb-4">Minha Sacola</h4>
-        
+<div class="row g-4 g-lg-5 my-4 animate-fade-in">
+    <div class="col-lg-8">
+        <h1 class="section-title" style="font-size: 1.3rem;">Minha Sacola</h1>
+        <p class="section-subtitle">Revise seus itens antes de finalizar.</p>
+
         <div id="lista-itens-carrinho">
-            <div class="py-5 text-center">
-                <p class="text-muted">Carregando sua sacola...</p>
+            <div class="empty-state">
+                <div class="empty-state-icon">🛒</div>
+                <p>Carregando sua sacola...</p>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm p-4" style="background-color: #fdfdfd; border-radius: 15px;">
-            <h5 class="fw-light text-uppercase mb-4">Resumo do Pedido</h5>
-            
+    <div class="col-lg-4">
+        <div class="resumo-card p-4">
+            <h5 style="font-weight: 600; font-size: 1rem; margin-bottom: 20px; color: var(--text-primary);">Resumo do Pedido</h5>
+
             <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Subtotal</span>
-                <span id="resumo-subtotal">R$ 0,00</span>
+                <span style="color: var(--text-secondary); font-size: 0.92rem;">Subtotal</span>
+                <span id="resumo-subtotal" style="font-weight: 500;">R$ 0,00</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Entrega (PAC)</span>
-                <span class="text-success small">Grátis</span>
+                <span style="color: var(--text-secondary); font-size: 0.92rem;">Entrega</span>
+                <span style="font-weight: 500;">R$ {{ number_format($freteFixo, 2, ',', '.') }}</span>
             </div>
-            <hr>
+            <hr style="border-color: var(--border-color);">
             <div class="d-flex justify-content-between mb-4">
-                <span class="fw-bold">Total</span>
-                <span class="fw-bold fs-5" id="resumo-total" style="color: var(--dark-olive);">R$ 0,00</span>
+                <span style="font-weight: 700; font-size: 1rem;">Total</span>
+                <span style="font-weight: 700; font-size: 1.2rem; color: var(--primary);" id="resumo-total">R$ 0,00</span>
             </div>
 
             <form action="{{ url('/checkout') }}" method="POST" id="formFinalizar">
                 @csrf
                 <input type="hidden" name="carrinho" id="inputCarrinhoJson">
-                <button type="button" onclick="finalizarCompra()" class="btn-comprar w-100 py-3 mb-2 shadow-sm" style="font-size: 0.9rem;">
+                <button type="button" onclick="finalizarCompra()" class="btn-comprar py-3 mb-2" style="font-size: 0.95rem; border-radius: 12px;">
                     Finalizar Compra
                 </button>
             </form>
-            
-            <a href="{{ url('/') }}" class="btn btn-link w-100 text-dark text-decoration-none small text-center mt-2">Continuar Comprando</a>
+
+            <a href="{{ url('/') }}" class="d-block text-center mt-3" style="color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; transition: color 0.2s;">
+                ← Continuar comprando
+            </a>
         </div>
     </div>
 </div>
@@ -48,22 +52,25 @@
 
 @section('scripts')
 <script>
-    // Transforma os produtos do PHP em uma variável JavaScript
     const produtosDB = @json($todosProdutos);
+    const freteFixo = {{ $freteFixo }};
 
     document.addEventListener("DOMContentLoaded", function() {
         renderizarCarrinho();
     });
 
     function renderizarCarrinho() {
-        const carrinho = getCarrinho(); // Função do seu js/carrinho.js
+        const carrinho = getCarrinho();
         const container = document.getElementById('lista-itens-carrinho');
-        
+
         if (Object.keys(carrinho).length === 0) {
             container.innerHTML = `
-                <div class="py-5 text-center">
-                    <p class="text-muted">Sua sacola está vazia.</p>
-                    <a href="{{ url('/') }}" class="btn btn-outline-dark rounded-pill px-4">Voltar para a loja</a>
+                <div class="empty-state">
+                    <div class="empty-state-icon">🧺</div>
+                    <p>Sua sacola está vazia.</p>
+                    <a href="{{ url('/') }}" class="btn-comprar" style="display: inline-block; width: auto; padding: 12px 32px; border-radius: 30px; text-decoration: none;">
+                        Explorar produtos
+                    </a>
                 </div>`;
             return;
         }
@@ -80,18 +87,24 @@
                 subtotal += precoTotalItem;
 
                 htmlItens += `
-                <div class="card mb-3 shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card mb-3 border-0 card-carrinho" style="border-radius: 12px;">
                     <div class="row g-0 align-items-center p-3">
                         <div class="col-3 col-md-2">
-                            <img src="/${produto.imagem_principal_url}" class="img-fluid rounded" alt="${produto.nome}" onerror="this.src='https://placehold.co/400x533/d4d9a1/434a11?text=Sem+Foto'">
+                            <img src="/${produto.imagem_principal_url}" class="img-fluid" style="border-radius: 10px; aspect-ratio: 1/1; object-fit: cover;" alt="${produto.nome}" onerror="this.src='https://placehold.co/200x200/d4d9a1/434a11?text=Sem+Foto'">
                         </div>
                         <div class="col-9 col-md-10 ps-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0 fw-bold">${produto.nome}</h6>
-                                <button class="btn btn-sm text-danger p-0" onclick="removerItem(${produto.id})">Remover</button>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6 class="mb-1" style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);">${produto.nome}</h6>
+                                <button class="btn btn-sm p-0" onclick="removerItem(${produto.id})" style="color: var(--danger); font-size: 0.8rem; font-weight: 500; border: none; background: none;">Remover</button>
                             </div>
-                            <p class="text-muted mb-1 small">Quantidade: ${quantidade}</p>
-                            <p class="mb-0 fw-bold" style="color: var(--dark-olive);">R$ ${precoTotalItem.toFixed(2).replace('.', ',')}</p>
+                            <div class="d-flex align-items-center mt-2 mb-2">
+                                <div class="qty-control">
+                                    <button class="qty-btn" onclick="alterarQtd(${produto.id}, -1)">−</button>
+                                    <span class="qty-value">${quantidade}</span>
+                                    <button class="qty-btn" onclick="alterarQtd(${produto.id}, 1)">+</button>
+                                </div>
+                            </div>
+                            <p class="mb-0" style="font-weight: 700; font-size: 1rem; color: var(--primary);">R$ ${precoTotalItem.toFixed(2).replace('.', ',')}</p>
                         </div>
                     </div>
                 </div>`;
@@ -100,20 +113,39 @@
 
         container.innerHTML = htmlItens;
 
-        let valorFormatado = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
-        document.getElementById('resumo-subtotal').innerText = valorFormatado;
-        document.getElementById('resumo-total').innerText = valorFormatado;
+        let total = subtotal > 0 ? subtotal + freteFixo : 0;
+
+        document.getElementById('resumo-subtotal').innerText = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
+        document.getElementById('resumo-total').innerText = 'R$ ' + total.toFixed(2).replace('.', ',');
+    }
+
+    function alterarQtd(id, delta) {
+        let carrinho = getCarrinho();
+        if (!carrinho[id]) return;
+
+        carrinho[id] += delta;
+        if (carrinho[id] <= 0) {
+            delete carrinho[id];
+        }
+        salvarCarrinho(carrinho);
+        renderizarCarrinho();
+        atualizarBadgeCarrinho();
     }
 
     function finalizarCompra() {
         const carrinho = localStorage.getItem("carrinho");
-        if (!carrinho || carrinho === "{}") {
+        if (!carrinho || carrinho === "{}" || Object.keys(JSON.parse(carrinho)).length === 0) {
             alert("Sua sacola está vazia!");
             return;
         }
-        
-        document.getElementById('inputCarrinhoJson').value = carrinho;
-        document.getElementById('formFinalizar').submit();
+
+        @auth
+            document.getElementById('inputCarrinhoJson').value = carrinho;
+            document.getElementById('formFinalizar').submit();
+        @else
+            // Save current state and redirect to login
+            window.location.href = "{{ route('login') }}";
+        @endauth
     }
 </script>
 @endsection

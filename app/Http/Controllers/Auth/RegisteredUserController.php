@@ -33,19 +33,23 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
+            'telefone' => ['nullable', 'string', 'max:20'],
+            'cpf' => ['nullable', 'string', 'max:14'],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'name' => strip_tags(trim($request->name)),
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'telefone' => $request->telefone ? preg_replace('/[^0-9]/', '', $request->telefone) : null,
+            'cpf' => $request->cpf ? preg_replace('/[^0-9]/', '', $request->cpf) : null,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('home', absolute: false));
     }
 }
