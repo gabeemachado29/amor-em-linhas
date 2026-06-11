@@ -13,6 +13,14 @@ class Pedido extends Model
         'valor_frete',
         'valor_total',
         'chave_pix_copia_cola',
+        'endereco_rua',
+        'endereco_numero',
+        'endereco_complemento',
+        'endereco_bairro',
+        'endereco_cidade',
+        'endereco_estado',
+        'endereco_cep',
+        'metodo_pagamento',
     ];
 
     public function cliente()

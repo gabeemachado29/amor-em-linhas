@@ -10,5 +10,13 @@ class ConfiguracaoLoja extends Model
         'chave_pix',
         'nome_loja',
         'valor_frete_fixo',
+        'mercadopago_ativo',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'mercadopago_ativo' => 'boolean',
+        ];
+    }
 }

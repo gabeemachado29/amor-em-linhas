@@ -12,8 +12,36 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
+    /**
+     * Exibir a tela de checkout com formulário de endereço.
+     */
+    public function index(Request $request)
+    {
+        $config = ConfiguracaoLoja::first();
+        $freteFixo = $config ? $config->valor_frete_fixo : 10.00;
+        $mercadoPagoAtivo = $config ? $config->mercadopago_ativo : false;
+        $todosProdutos = Produto::select('id', 'nome', 'preco', 'imagem_principal_url')->get();
+        $user = Auth::user();
+
+        return view('checkout.index', compact('todosProdutos', 'freteFixo', 'mercadoPagoAtivo', 'user'));
+    }
+
+    /**
+     * Processar o checkout com dados de endereço.
+     */
     public function process(Request $request)
     {
+        $request->validate([
+            'endereco_rua' => 'required|string|max:255',
+            'endereco_numero' => 'required|string|max:20',
+            'endereco_complemento' => 'nullable|string|max:255',
+            'endereco_bairro' => 'required|string|max:255',
+            'endereco_cidade' => 'required|string|max:255',
+            'endereco_estado' => 'required|string|size:2',
+            'endereco_cep' => 'required|string|max:9',
+            'metodo_pagamento' => 'required|string|in:PIX,MERCADO_PAGO',
+        ]);
+
         $carrinhoJson = $request->input('carrinho');
         if (!$carrinhoJson) {
             return redirect()->route('carrinho.index')->with('error', 'Sua sacola está vazia.');
@@ -60,10 +88,20 @@ class CheckoutController extends Controller
             $pedido = new Pedido();
             $pedido->cliente_id = Auth::id();
             $pedido->status = 'PENDENTE';
-            $pedido->tipo_entrega = 'PAC'; // Default para este MVP
+            $pedido->tipo_entrega = 'PAC';
             $pedido->valor_frete = $freteFixo;
             $pedido->valor_total = $total;
             $pedido->chave_pix_copia_cola = $config ? $config->chave_pix : null;
+            $pedido->metodo_pagamento = $request->input('metodo_pagamento', 'PIX');
+
+            // Dados de endereço
+            $pedido->endereco_rua = strip_tags(trim($request->input('endereco_rua')));
+            $pedido->endereco_numero = strip_tags(trim($request->input('endereco_numero')));
+            $pedido->endereco_complemento = strip_tags(trim($request->input('endereco_complemento')));
+            $pedido->endereco_bairro = strip_tags(trim($request->input('endereco_bairro')));
+            $pedido->endereco_cidade = strip_tags(trim($request->input('endereco_cidade')));
+            $pedido->endereco_estado = strtoupper(strip_tags(trim($request->input('endereco_estado'))));
+            $pedido->endereco_cep = preg_replace('/[^0-9\-]/', '', $request->input('endereco_cep'));
             $pedido->save();
 
             // Deduzir estoque e salvar itens
@@ -84,6 +122,21 @@ class CheckoutController extends Controller
             }
 
             DB::commit();
+
+            // Se o método for Mercado Pago, redirecionar para pagamento
+            if ($pedido->metodo_pagamento === 'MERCADO_PAGO') {
+                try {
+                    $mpService = new \App\Services\MercadoPagoService();
+                    $preferenceUrl = $mpService->criarPreferencia($pedido);
+                    if ($preferenceUrl) {
+                        return redirect()->away($preferenceUrl);
+                    }
+                } catch (\Exception $e) {
+                    // Fallback para PIX se Mercado Pago falhar
+                    $pedido->metodo_pagamento = 'PIX';
+                    $pedido->save();
+                }
+            }
 
             return redirect()->route('checkout.success', ['pedido' => $pedido->id]);
 

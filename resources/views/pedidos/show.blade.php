@@ -32,6 +32,17 @@
         </div>
         @endif
 
+        @if($pedido->endereco_rua)
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: var(--radius-lg);">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3" style="color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">📍 Endereço de Entrega</h5>
+                <p class="mb-1" style="font-size: 0.92rem;">{{ $pedido->endereco_rua }}, {{ $pedido->endereco_numero }}{{ $pedido->endereco_complemento ? ' — ' . $pedido->endereco_complemento : '' }}</p>
+                <p class="mb-1" style="font-size: 0.92rem; color: var(--text-secondary);">{{ $pedido->endereco_bairro }} · {{ $pedido->endereco_cidade }}/{{ $pedido->endereco_estado }}</p>
+                <p class="mb-0" style="font-size: 0.92rem; color: var(--text-secondary);">CEP: {{ $pedido->endereco_cep }}</p>
+            </div>
+        </div>
+        @endif
+
         <div class="card shadow-sm border-0 mb-4" style="border-radius: var(--radius-lg);">
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-4" style="color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Resumo da Compra</h5>

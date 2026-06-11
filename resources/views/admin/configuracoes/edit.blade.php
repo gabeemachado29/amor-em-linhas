@@ -43,6 +43,20 @@
                         @enderror
                     </div>
 
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-3" style="color: var(--primary-color);">💳 Mercado Pago</h5>
+
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="mercadopago_ativo" name="mercadopago_ativo" value="1" {{ old('mercadopago_ativo', $config->mercadopago_ativo ?? false) ? 'checked' : '' }}>
+                            <label class="form-check-label fw-medium" for="mercadopago_ativo">
+                                Ativar pagamento via Mercado Pago
+                            </label>
+                        </div>
+                        <small class="text-muted d-block mt-1">Quando ativado, os clientes poderão pagar com cartão de crédito/débito via Mercado Pago. Configure as chaves no arquivo <code>.env</code> do servidor.</small>
+                    </div>
+
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary px-4" style="background-color: var(--primary-color); border-color: var(--primary-color);">Salvar Configurações</button>
                     </div>

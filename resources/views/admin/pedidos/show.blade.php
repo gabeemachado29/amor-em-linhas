@@ -24,6 +24,36 @@
                     </div>
                 </div>
 
+                @if($pedido->endereco_rua)
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <h5 class="fw-bold" style="color: var(--primary-color);">📍 Endereço de Entrega</h5>
+                    </div>
+                    <div class="card-body" style="font-size: 0.9rem;">
+                        <p class="mb-1">{{ $pedido->endereco_rua }}, {{ $pedido->endereco_numero }}</p>
+                        @if($pedido->endereco_complemento)
+                            <p class="mb-1">{{ $pedido->endereco_complemento }}</p>
+                        @endif
+                        <p class="mb-1">{{ $pedido->endereco_bairro }}</p>
+                        <p class="mb-1">{{ $pedido->endereco_cidade }} — {{ $pedido->endereco_estado }}</p>
+                        <p class="mb-0"><strong>CEP:</strong> {{ $pedido->endereco_cep }}</p>
+                    </div>
+                </div>
+                @endif
+
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <h5 class="fw-bold" style="color: var(--primary-color);">💳 Pagamento</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">
+                            <span class="badge {{ $pedido->metodo_pagamento === 'PIX' ? 'bg-success' : 'bg-info' }} px-2 py-1" style="font-size: 0.82rem;">
+                                {{ $pedido->metodo_pagamento === 'PIX' ? '💸 PIX' : '💳 Mercado Pago' }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
                         <h5 class="fw-bold" style="color: var(--primary-color);">Atualizar Status</h5>

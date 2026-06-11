@@ -92,6 +92,11 @@
                                     🖼️ Banners
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.clientes.index') }}" class="nav-link {{ request()->routeIs('admin.clientes.*') ? 'text-dark fw-bold bg-light' : 'text-muted' }} rounded px-3 py-2">
+                                    👥 Clientes
+                                </a>
+                            </li>
                             <li class="nav-item mt-3">
                                 <h6 class="px-3 fw-bold text-muted text-uppercase" style="font-size: 0.85rem;">Sistema</h6>
                             </li>

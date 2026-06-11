@@ -34,13 +34,9 @@
                 <span style="font-weight: 700; font-size: 1.2rem; color: var(--primary);" id="resumo-total">R$ 0,00</span>
             </div>
 
-            <form action="{{ url('/checkout') }}" method="POST" id="formFinalizar">
-                @csrf
-                <input type="hidden" name="carrinho" id="inputCarrinhoJson">
-                <button type="button" onclick="finalizarCompra()" class="btn-comprar py-3 mb-2" style="font-size: 0.95rem; border-radius: 12px;">
-                    Finalizar Compra
-                </button>
-            </form>
+            <button type="button" onclick="irParaCheckout()" class="btn-comprar py-3 mb-2" style="font-size: 0.95rem; border-radius: 12px;">
+                Continuar para Checkout
+            </button>
 
             <a href="{{ url('/') }}" class="d-block text-center mt-3" style="color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; transition: color 0.2s;">
                 ← Continuar comprando
@@ -132,7 +128,7 @@
         atualizarBadgeCarrinho();
     }
 
-    function finalizarCompra() {
+    function irParaCheckout() {
         const carrinho = localStorage.getItem("carrinho");
         if (!carrinho || carrinho === "{}" || Object.keys(JSON.parse(carrinho)).length === 0) {
             alert("Sua sacola está vazia!");
@@ -140,10 +136,9 @@
         }
 
         @auth
-            document.getElementById('inputCarrinhoJson').value = carrinho;
-            document.getElementById('formFinalizar').submit();
+            window.location.href = "{{ route('checkout.index') }}";
         @else
-            // Save current state and redirect to login
+            // Redirecionar para login, depois volta ao checkout
             window.location.href = "{{ route('login') }}";
         @endauth
     }

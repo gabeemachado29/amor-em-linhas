@@ -30,6 +30,7 @@ class ConfiguracaoController extends Controller
         $config->nome_loja = $request->input('nome_loja');
         $config->chave_pix = $request->input('chave_pix');
         $config->valor_frete_fixo = $request->input('valor_frete_fixo', 0);
+        $config->mercadopago_ativo = $request->boolean('mercadopago_ativo');
         $config->save();
 
         return redirect()->route('admin.configuracoes.edit')->with('success', 'Configurações atualizadas com sucesso!');
